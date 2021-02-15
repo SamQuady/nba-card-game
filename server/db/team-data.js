@@ -73,3 +73,5 @@ const teamDataCreation = () => {
   csvWriteControllers.csvWriteTeams
     .writeRecords(teamHolder);
 }
+
+teamDataCreation();

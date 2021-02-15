@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/index.js -w",
-    "build": "npx webpack -w"
+    "build": "npx webpack -w",
+    "write-teams": "node server/db/team-data.js"
   },
   "keywords": [],
   "author": "",

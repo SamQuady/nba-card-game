@@ -43,7 +43,7 @@ const csvWriteStats = csvWriter.createObjectCsvWriter({
 });
 
 const csvWriteTeams = csvWriter.createObjectCsvWriter({
-  path: 'server/db/csv-data/player-records.csv',
+  path: 'server/db/csv-data/team-records.csv',
   append: true,
   header: [
     {id: 'id', title: 'id'},
