@@ -2,7 +2,7 @@ const csvWriter = require('csv-writer');
 
 const csvWritePlayers = csvWriter.createObjectCsvWriter({
   path: 'server/db/csv-data/player-records.csv',
-  append: true,
+  append: false,
   header: [
     {id: 'id', title: 'id'},
     {id: 'first_name', title: 'first_name'},
@@ -16,7 +16,7 @@ const csvWritePlayers = csvWriter.createObjectCsvWriter({
 
 const csvWriteStats = csvWriter.createObjectCsvWriter({
   path: 'server/db/csv-data/player-stats.csv',
-  append: true,
+  append: false,
   header: [
     {id: 'games_played', title: 'games_played'},
     {id: 'player_id', title: 'player_id'},
@@ -44,7 +44,7 @@ const csvWriteStats = csvWriter.createObjectCsvWriter({
 
 const csvWriteTeams = csvWriter.createObjectCsvWriter({
   path: 'server/db/csv-data/team-records.csv',
-  append: true,
+  append: false,
   header: [
     {id: 'id', title: 'id'},
     {id: 'abbreviation', title: 'abbreviation'},
