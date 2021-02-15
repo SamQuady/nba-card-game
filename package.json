@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon server/index.js -w",
     "build": "npx webpack -w",
+    "write-players": "node server/db/player-data.js",
     "write-stats": "node server/db/player-stats.js",
     "write-teams": "node server/db/team-data.js"
   },

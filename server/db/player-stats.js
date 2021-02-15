@@ -10,10 +10,10 @@ const statGetter = () => {
 
   let queryAddition = 'player_ids[]=';
 
-  for (let index = 1; index <= 493; index ++) {
+  for (let index = 1; index <= players; index ++) {
 
     let queryParams = '';
-    if (index < 493) {
+    if (index < players) {
       queryParams = queryAddition + index + '&';
     } else {
       queryParams = queryAddition + index;
