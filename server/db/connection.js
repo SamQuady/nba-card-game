@@ -117,7 +117,6 @@ const playerCardDataGetter = (id, cb) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('team id should be here', playerRes.rows[0].team);
       teamId = playerRes.rows[0].team;
       data.push(playerRes.rows[0]);
       pool.query(statsQuery + id, (err, statsRes) => {
