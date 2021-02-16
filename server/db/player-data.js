@@ -3,29 +3,24 @@ const csvWriteControllers = require('./csv-write-controllers.js');
 
 const players = 493;
 
-const wait = (ms) => {
-  console.log('waiting');
-  var start = new Date().getTime();
-  var end = start;
-  while(end < start + ms) {
-    end = new Date().getTime();
-  }
-}
 
-const playerGetter = () => {
+const playerGetter = (startIn) => {
 
   let route = 'https://www.balldontlie.io/api/v1/players/';
 
   let dataHolder = [];
 
-  for (let index = 1; index <= 100; index ++) {
-    if (index % 10 === 0) {
-      wait(10000);
-    }
+  for (let index = startIn; index <= startIn + 25; index ++) {
     axios.get(route + index)
     .then((res) => {
-      dataHolder.push(res.data);
-      if (dataHolder.length === 100) {
+      let record = res.data;
+      let team_id = res.data.team.id;
+      record.team = team_id;
+      dataHolder.push(record);
+      if (dataHolder.length === 25) {
+        dataHolder.sort((a, b) => {
+          return a.id - b.id;
+        });
         csvWriteControllers.csvWritePlayers
           .writeRecords(dataHolder);
       }
@@ -36,4 +31,4 @@ const playerGetter = () => {
   }
 }
 
-playerGetter();
+playerGetter(1)
