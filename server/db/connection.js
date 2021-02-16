@@ -103,6 +103,42 @@ DELIMITER ','
 CSV HEADER;
 `;
 
+const playerQuery = `SELECT * FROM players WHERE id = `;
+
+const statsQuery = `SELECT * FROM stats WHERE player_id = `;
+
+const teamQuery = `SELECT * FROM teams WHERE id = `;
+
+// -------Front Facing Records Query----------//
+const playerCardDataGetter = (id, cb) => {
+  let data = [];
+  let teamId = 0;
+  pool.query(playerQuery + id, (err, playerRes) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('team id should be here', playerRes.rows[0].team);
+      teamId = playerRes.rows[0].team;
+      data.push(playerRes.rows[0]);
+      pool.query(statsQuery + id, (err, statsRes) => {
+        if (err) {
+          console.log(err);
+        } else {
+          data.push(statsRes.rows[0]);
+          pool.query(teamQuery + teamId, (err, teamRes) => {
+            if (err) {
+              console.log(err);
+            } else {
+              data.push(teamRes.rows[0]);
+              cb(null, data);
+            }
+          })
+        }
+      })
+    }
+  })
+}
+
 
 //-------Dropping Tables Queries-----------//
 
@@ -182,6 +218,27 @@ client
   })
   .then(() => client.end())
 
+//--------------Opening Pool Connection for Front Facing Access-------//
+
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  host: 'localhost',
+  database: 'showdown',
+  port: 5432
+});
+
+pool
+  .connect()
+  .then(() => {
+    console.log('Pool Connected')
+  })
+  .catch(err => {
+    console.log('Pool Connection Error', err)
+  })
+
 module.exports = {
-  client
+  client,
+  pool,
+  playerCardDataGetter
 }
