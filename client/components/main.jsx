@@ -160,7 +160,7 @@ class Main extends React.Component {
         let opp = result[0][2];
         for (let index = 0; index < result.length; index ++) {
           if (result[index][1] !== null) {
-            colatedInfo.push([result]);
+            colatedInfo.push([result[index]]);
           }
         }
         this.setState({loadedOpp: true, oppData: colatedInfo, oppInfo: opp});
@@ -218,10 +218,21 @@ class Main extends React.Component {
         </div>
         )
       } else {
+        console.log(this.state.oppData)
         return (
           <div>
             <h2>Basketball Showdown</h2>
             <div>Your Squad Will be Taking on the {' ' + this.state.oppInfo.full_name}</div>
+            <div>
+              <div>
+                {this.state.rotation.map((item, index) => <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}
+              </div>)}
+              <div>
+                {this.state.oppData.map((item, index) => <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][1].min + ' mins'}</div>)}
+              </div>
+              </div>
+            </div>
+            <button>Ready?</button>
           </div>
         )
       }
