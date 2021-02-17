@@ -12,11 +12,13 @@ class Main extends React.Component {
       minutesAdj: false,
       data: [],
       teamIndexes: [],
-      selectedPlayerRecords: []
+      selectedPlayerRecords: [],
+      selectedTeamStats: {}
     };
     this.packIdSelection = this.packIdSelection.bind(this);
     this.cardClickHandler = this.cardClickHandler.bind(this);
     this.teamSelectedHandler = this.teamSelectedHandler.bind(this);
+    this.handleMinutesChange = this.handleMinutesChange.bind(this);
   }
 
   packIdSelection() {
@@ -60,6 +62,10 @@ class Main extends React.Component {
     }
   }
 
+  handleMinutesChange(event) {
+    console.log(event.target.id, event.target.value);
+  }
+
   componentDidMount() {
     let ids = this.packIdSelection();
     let colatedInfo = [];
@@ -88,7 +94,13 @@ class Main extends React.Component {
   render() {
     if (this.state.minutesAdj) {
       return (
-        <div>{this.state.selectedPlayerRecords.map((item, index) => <CardView key={index} info={item}/>)}</div>
+        <div>
+          {this.state.selectedPlayerRecords.map((item, index) =>
+          <div key={index}>
+            <CardView info={item}/>
+            <input type="number" name="minutes" min="0" max="48" id={'input' + index} onChange={this.handleMinutesChange}></input>
+          </div>)}
+        </div>
       )
     }
     if (this.state.loaded) {
