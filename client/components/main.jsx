@@ -40,6 +40,7 @@ class Main extends React.Component {
       loaded: false,
       selection: true,
       minutesAdj: false,
+      rosterView: false,
       gamePreview: false,
       pregameEvent: false,
       gamePage: false,
@@ -58,6 +59,7 @@ class Main extends React.Component {
     this.handleMinutesChange = this.handleMinutesChange.bind(this);
     this.teamMinutesSelectedHandler = this.teamMinutesSelectedHandler.bind(this);
     this.statsBasedOnSelectedMinutes = this.statsBasedOnSelectedMinutes.bind(this);
+    this.handleRosterViewAdvanceClick = this.handleRosterViewAdvanceClick.bind(this);
   }
 
   packIdSelection() {
@@ -128,7 +130,7 @@ class Main extends React.Component {
       records.sort((a, b) => {
         return b[0][3].assignedMinutes - a[0][3].assignedMinutes;
       });
-      this.setState({minutesAdj: false, gamePreview: true, rotation: records});
+      this.setState({minutesAdj: false, rosterView: true, rotation: records});
     }
   }
 
@@ -146,13 +148,17 @@ class Main extends React.Component {
     this.setState({selectedPlayerRecords: records});
   }
 
+  handleRosterViewAdvanceClick(event) {
+    this.setState({rosterView: false, gamePreview: true});
+  }
+
   componentDidMount() {
     //add more robust null elimination, more robust prevention of additional entries upon first selection click
     let ids = this.packIdSelection();
     let colatedInfo = [];
     let selectedIds = [];
     for (let index = 0; index < ids.length; index ++) {
-      fetch('http://localhost:8080/api/' + ids[index])
+      fetch('http://localhost:8080/api/players/' + ids[index])
         .then(result => result.json())
         .then((result) => {
           let playerId = result[0].id;
@@ -192,9 +198,20 @@ class Main extends React.Component {
       return (
         <div>
           <h2>Basketball Showdown</h2>
+          <div>Your Squad Will Be Taking on the </div>
+        </div>
+      )
+    }
+    if (this.state.rosterView) {
+      return (
+        <div>
+          <h2>Basketball Showdown</h2>
           {this.state.rotation.map((item, index) =>
           <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}</div>
           )}
+          <ButtonHolder>
+            <PlayButtons onClick={this.handleRosterViewAdvanceClick}>Play a Game!</PlayButtons>
+          </ButtonHolder>
         </div>
       )
     }

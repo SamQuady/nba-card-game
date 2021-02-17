@@ -109,6 +109,8 @@ const statsQuery = `SELECT * FROM stats WHERE player_id = `;
 
 const teamQuery = `SELECT * FROM teams WHERE id = `;
 
+const oppPlayerQuery = `SELECT * FROM players WHERE team = `;
+
 // -------Front Facing Records Query----------//
 const playerCardDataGetter = (id, cb) => {
   let data = [];
@@ -134,6 +136,39 @@ const playerCardDataGetter = (id, cb) => {
           })
         }
       })
+    }
+  })
+}
+
+const teamGetter = (id, cb) => {
+  let data = [];
+  pool.query(oppPlayerQuery + id, (err, playerRes) => {
+    if (err) {
+      console.log(err);
+    } else {
+      let playerRecords = playerRes.rows;
+      for (let index = 0; index < playerRecords.length; index ++) {
+        let record = [];
+        record.push(playerRecords[index]);
+        pool.query(statsQuery + playerRecords[index].id, (err, statsRes) => {
+          if (err) {
+            console.log(err);
+          } else {
+            record.push(statsRes.rows[0]);
+            pool.query(teamQuery + id, (err, teamRes) => {
+              if (err) {
+                console.log(err);
+              } else {
+                record.push(teamRes.rows[0]);
+                data.push(record);
+                if (data.length === playerRecords.length) {
+                  cb(null, data);
+                }
+              }
+            })
+          }
+        })
+      }
     }
   })
 }
@@ -239,5 +274,6 @@ pool
 module.exports = {
   client,
   pool,
-  playerCardDataGetter
+  playerCardDataGetter,
+  teamGetter
 }
