@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Card = styled.div`
-width: 20%;
 background-color: white;
+length: 100px;
 border-radius: 4px;
 border-style: solid;
 border-color: rgb(184, 184, 184);

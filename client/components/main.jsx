@@ -2,6 +2,36 @@ import React from 'react';
 import CardView from './card-view.jsx';
 import styled from 'styled-components';
 
+const CardGridContainer = styled.div`
+display: grid;
+grid-template-columns: 18% 18% 18% 18% 18%;
+grid-column-gap: 1%;
+grid-row-gap: 2%;
+`;
+
+const PlayButtons = styled.button`
+line-height: 30px;
+margin-left: 0.75em;
+background-color: white;
+border-radius: 2px;
+border-style: solid;
+border-color: rgb(184, 184, 184);
+border-width: 1px;
+color: rgb(41, 41, 41);
+cursor: pointer;
+font-family: "Roboto","Helvetica Neue","Helvetica","Arial",sans-serif;
+font-size: 14px;
+font-weight: 400;
+height: 34px;
+width: auto;
+&:hover {box-shadow: inset 0 0 3px #000000;}
+`;
+
+const ButtonHolder = styled.div`
+margin-top: 30px;
+padding-top: 30px;
+`
+
 
 class Main extends React.Component {
   constructor(props) {
@@ -10,15 +40,23 @@ class Main extends React.Component {
       loaded: false,
       selection: true,
       minutesAdj: false,
+      gamePreview: false,
+      pregameEvent: false,
+      gamePage: false,
       data: [],
       teamIndexes: [],
       selectedPlayerRecords: [],
-      selectedTeamStats: {}
+      rotation: [],
+      selectedTeamStats: {},
+      alottedMinutes: 0,
+      teamWins: 0,
+      teamLosses: 0
     };
     this.packIdSelection = this.packIdSelection.bind(this);
     this.cardClickHandler = this.cardClickHandler.bind(this);
     this.teamSelectedHandler = this.teamSelectedHandler.bind(this);
     this.handleMinutesChange = this.handleMinutesChange.bind(this);
+    this.teamMinutesSelectedHandler = this.teamMinutesSelectedHandler.bind(this);
   }
 
   packIdSelection() {
@@ -63,10 +101,37 @@ class Main extends React.Component {
   }
 
   handleMinutesChange(event) {
-    console.log(event.target.id, event.target.value);
+    let minutes = 0;
+    let records = this.state.selectedPlayerRecords;
+    records[event.target.id][0][3].assignedMinutes = Number(event.target.value);
+    for (let index = 0; index < records.length; index ++) {
+      minutes += Number(records[index][0][3].assignedMinutes);
+    };
+    if (minutes >= 240) {
+      alert(`You Assigned All Available Minutes, Already!`);
+    }
+    this.setState({selectedPlayerRecords: records, alottedMinutes: minutes});
+  }
+
+  teamMinutesSelectedHandler(event) {
+    if (this.state.alottedMinutes !== 240) {
+      event.preventDefault();
+      if (this.state.allotedMinutes > 240) {
+        alert(`You Assigned Too Many Minutes to Continue! Subtract Some!`);
+      } else {
+        alert(`You Haven't Assigned Enough Minutes Yet to Coninue! Add Some More!`);
+      }
+    } else {
+      let records = this.state.selectedPlayerRecords;
+      records.sort((a, b) => {
+        return b[0][3].assignedMinutes - a[0][3].assignedMinutes;
+      });
+      this.setState({minutesAdj: false, gamePreview: true, rotation: records});
+    }
   }
 
   componentDidMount() {
+    //add more robust null elimination, more robust prevention of additional entries upon first selection click
     let ids = this.packIdSelection();
     let colatedInfo = [];
     let selectedIds = [];
@@ -78,11 +143,13 @@ class Main extends React.Component {
           if (selectedIds.indexOf(playerId) < 0) {
             selectedIds.push(playerId);
             if (result[1] !== null) {
+              result.push({assignedMinutes: 0});
               colatedInfo.push([result]);
             }
           }
           if (colatedInfo.length === 20) {
             this.setState({loaded:true, data: colatedInfo});
+            return;
           }
         },
         (error) => {
@@ -92,14 +159,30 @@ class Main extends React.Component {
     }
   }
   render() {
+    if (this.state.gamePreview) {
+      return (
+        <div>
+          <h2>Basketball Showdown</h2>
+          {this.state.rotation.map((item, index) =>
+          <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}</div>
+          )}
+        </div>
+      )
+    }
     if (this.state.minutesAdj) {
       return (
         <div>
-          {this.state.selectedPlayerRecords.map((item, index) =>
-          <div key={index}>
-            <CardView info={item}/>
-            <input type="number" name="minutes" min="0" max="48" id={'input' + index} onChange={this.handleMinutesChange}></input>
-          </div>)}
+          <h2>Basketball Showdown</h2>
+          <div>Set Your Team's Minutes, Coach!</div>
+          <div>{this.state.alottedMinutes} / 240</div>
+          <CardGridContainer>
+            {this.state.selectedPlayerRecords.map((item, index) =>
+            <div key={index}>
+              <CardView info={item}/>
+              <input type="number" name="minutes" min="0" max="48" id={index} onChange={this.handleMinutesChange}></input>
+            </div>)}
+          </CardGridContainer>
+          <button onClick={this.teamMinutesSelectedHandler}>Let's Play!</button>
         </div>
       )
     }
@@ -109,8 +192,10 @@ class Main extends React.Component {
           <h2>Basketball Showdown</h2>
           <div>Select 12 Players!</div>
           <div>{this.state.selectedPlayerRecords.length} out of 12</div>
-          <div>{this.state.data.map((item, index) => <CardView onClick={this.cardClickHandler} key={index} info={item}/>)}</div>
-          <button onClick={this.teamSelectedHandler}>Done?</button>
+          <CardGridContainer>{this.state.data.map((item, index) => <CardView onClick={this.cardClickHandler} key={index} info={item}/>)}</CardGridContainer>
+          <ButtonHolder>
+            <PlayButtons onClick={this.teamSelectedHandler}>Done?</PlayButtons>
+          </ButtonHolder>
         </div>
       )
     }
