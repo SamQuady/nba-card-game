@@ -29,7 +29,7 @@ class Main extends React.Component {
   }
 
   cardClickHandler(record) {
-    let index = record[0].id;
+    let index = record[0][0].id;
     if (this.state.teamIndexes.indexOf(index) < 0) {
       if (this.state.teamIndexes.length === 12) {
         event.preventDefault();
@@ -86,10 +86,17 @@ class Main extends React.Component {
     }
   }
   render() {
-    if (this.state.loaded === true) {
+    if (this.state.minutesAdj) {
+      return (
+        <div>{this.state.selectedPlayerRecords.map((item, index) => <CardView key={index} info={item}/>)}</div>
+      )
+    }
+    if (this.state.loaded) {
       return (
         <div>
           <h2>Basketball Showdown</h2>
+          <div>Select 12 Players!</div>
+          <div>{this.state.selectedPlayerRecords.length} out of 12</div>
           <div>{this.state.data.map((item, index) => <CardView onClick={this.cardClickHandler} key={index} info={item}/>)}</div>
           <button onClick={this.teamSelectedHandler}>Done?</button>
         </div>

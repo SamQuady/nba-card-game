@@ -21,7 +21,7 @@ class CardView extends React.Component {
   }
   render() {
     return (
-      <Card onClick={(event) => this.props.onClick(this.props.info[0])}>
+      <Card onClick={(event) => this.props.onClick(this.props.info)}>
         <div>{this.props.info[0][0].first_name + ' ' + this.props.info[0][0].last_name}</div>
         <div>{this.props.info[0][0].height_feet + '\'' + this.props.info[0][0].height_inches + '"' + ' ' + this.props.info[0][0].weight_pounds + ' lbs. ' + this.props.info[0][0].position}</div>
         <div>{this.props.info[0][2].full_name}</div>
