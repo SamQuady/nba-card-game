@@ -38,7 +38,7 @@ class CardView extends React.Component {
     if (this.state.clicked) {
       return (
         <ClickedCard onClick={(event) => {
-          this.setState({clicked: [!this.state.clicked]})
+          this.setState({clicked: false})
           this.props.onClick(this.props.info);
         }}>
           <div>{this.props.info[0][0].first_name + ' ' + this.props.info[0][0].last_name}</div>
@@ -53,7 +53,7 @@ class CardView extends React.Component {
     } else {
       return (
         <Card onClick={(event) => {
-          this.setState({clicked: [!this.state.clicked]})
+          this.setState({clicked: true});
           this.props.onClick(this.props.info);
         }}>
         <div>{this.props.info[0][0].first_name + ' ' + this.props.info[0][0].last_name}</div>
