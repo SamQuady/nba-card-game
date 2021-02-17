@@ -27,6 +27,18 @@ font-size: 20px;
 &:hover {box-shadow: inset 0 0 10px #000000;}
 `;
 
+const PlayerName = styled.div`
+font-family: Copperplate, fantasy;
+font-size: 20px;
+text-align: center;
+`;
+
+const Stats = styled.div`
+font-family: Arial, Helvetica, sans-serif;
+font-size: 18px;
+text-align: center;
+`;
+
 class CardView extends React.Component {
   constructor(props) {
     super(props);
@@ -41,13 +53,13 @@ class CardView extends React.Component {
           this.setState({clicked: false})
           this.props.onClick(this.props.info);
         }}>
-          <div>{this.props.info[0][0].first_name + ' ' + this.props.info[0][0].last_name}</div>
-          <div>{this.props.info[0][0].height_feet + '\'' + this.props.info[0][0].height_inches + '"' + ' ' + this.props.info[0][0].weight_pounds + ' lbs. ' + this.props.info[0][0].position}</div>
-          <div>{this.props.info[0][2].full_name}</div>
-          <div>{this.props.info[0][1].min + 'mpg'}</div>
-          <div>{(Math.round(this.props.info[0][1].pts * 10) / 10) + 'pts'}</div>
-          <div>{(Math.round(this.props.info[0][1].reb * 10) / 10) + 'reb'}</div>
-          <div>{(Math.round(this.props.info[0][1].ast * 10) / 10) + 'ast'}</div>
+          <PlayerName>{this.props.info[0][0].first_name + ' ' + this.props.info[0][0].last_name}</PlayerName>
+          <Stats>{this.props.info[0][0].height_feet + '\'' + this.props.info[0][0].height_inches + '"' + ' ' + this.props.info[0][0].weight_pounds + ' lbs. ' + this.props.info[0][0].position}</Stats>
+          <Stats>{this.props.info[0][2].full_name}</Stats>
+          <Stats>{this.props.info[0][1].min + 'mpg'}</Stats>
+          <Stats>{(Math.round(this.props.info[0][1].pts * 10) / 10) + 'pts'}</Stats>
+          <Stats>{(Math.round(this.props.info[0][1].reb * 10) / 10) + 'reb'}</Stats>
+          <Stats>{(Math.round(this.props.info[0][1].ast * 10) / 10) + 'ast'}</Stats>
         </ClickedCard>
       )
     } else {
@@ -56,13 +68,13 @@ class CardView extends React.Component {
           this.setState({clicked: true});
           this.props.onClick(this.props.info);
         }}>
-        <div>{this.props.info[0][0].first_name + ' ' + this.props.info[0][0].last_name}</div>
-        <div>{this.props.info[0][0].height_feet + '\'' + this.props.info[0][0].height_inches + '"' + ' ' + this.props.info[0][0].weight_pounds + ' lbs. ' + this.props.info[0][0].position}</div>
-        <div>{this.props.info[0][2].full_name}</div>
-        <div>{this.props.info[0][1].min + 'mpg'}</div>
-        <div>{(Math.round(this.props.info[0][1].pts * 10) / 10) + 'pts'}</div>
-        <div>{(Math.round(this.props.info[0][1].reb * 10) / 10) + 'reb'}</div>
-        <div>{(Math.round(this.props.info[0][1].ast * 10) / 10) + 'ast'}</div>
+        <PlayerName>{this.props.info[0][0].first_name + ' ' + this.props.info[0][0].last_name}</PlayerName>
+        <Stats>{this.props.info[0][0].height_feet + '\'' + this.props.info[0][0].height_inches + '"' + ' ' + this.props.info[0][0].weight_pounds + ' lbs. ' + this.props.info[0][0].position}</Stats>
+        <Stats>{this.props.info[0][2].full_name}</Stats>
+        <Stats>{this.props.info[0][1].min + 'mpg'}</Stats>
+        <Stats>{(Math.round(this.props.info[0][1].pts * 10) / 10) + 'pts'}</Stats>
+        <Stats>{(Math.round(this.props.info[0][1].reb * 10) / 10) + 'reb'}</Stats>
+        <Stats>{(Math.round(this.props.info[0][1].ast * 10) / 10) + 'ast'}</Stats>
         </Card>
       )
     }

@@ -11,7 +11,6 @@ grid-row-gap: 2%;
 
 const PlayButtons = styled.button`
 line-height: 30px;
-margin-left: 0.75em;
 background-color: white;
 border-radius: 2px;
 border-style: solid;
@@ -30,6 +29,37 @@ width: auto;
 const ButtonHolder = styled.div`
 margin-top: 30px;
 padding-top: 30px;
+text-align: center;
+`;
+
+const Title = styled.h2`
+font-family: Copperplate, fantasy;
+font-size: 30px;
+text-align: center;
+`;
+
+const IntroText = styled.div`
+font-family: Arial, Helvetica, sans-serif;
+font-size: 20px;
+text-align: center;
+`;
+
+const WinText = styled.div`
+font-family: Arial, Helvetica, sans-serif;
+font-size: 30px;
+text-align: center;
+`;
+
+const PlayerName = styled.div`
+font-family: Copperplate, fantasy;
+font-size: 20px;
+text-align: center;
+`;
+
+const Stats = styled.div`
+font-family: Arial, Helvetica, sans-serif;
+font-size: 18px;
+text-align: center;
 `;
 
 
@@ -327,9 +357,9 @@ class Main extends React.Component {
       if (this.state.selectedTeamStats.decision === 'win') {
         return (
           <div>
-            <h2>Basketball Showdown</h2>
-            <div>Congratulations! You Won</div>
-            <div>Final Score - You: {this.state.selectedTeamStats.teamStats.pts} {' ' + this.state.oppInfo.full_name + ': ' + this.state.selectedTeamStats.oppStats.pts}</div>
+            <Title>Basketball Showdown</Title>
+            <WinText>Congratulations! You Won</WinText>
+            <IntroText>Final Score - You: {this.state.selectedTeamStats.teamStats.pts} {' ' + this.state.oppInfo.full_name + ': ' + this.state.selectedTeamStats.oppStats.pts}</IntroText>
             <ButtonHolder>
               <PlayButtons onClick={this.playAgainClick}>Play Again?!</PlayButtons>
             </ButtonHolder>
@@ -338,9 +368,9 @@ class Main extends React.Component {
       } else {
         return (
           <div>
-            <h2>Basketball Showdown</h2>
-            <div>Whoops! You Lost</div>
-            <div>Final Score - You: {this.state.selectedTeamStats.teamStats.pts} {' ' + this.state.oppInfo.full_name + ': ' + this.state.selectedTeamStats.oppStats.pts}</div>
+            <Title>Basketball Showdown</Title>
+            <IntroText>Whoops! You Lost</IntroText>
+            <IntroText>Final Score - You: {this.state.selectedTeamStats.teamStats.pts} {' ' + this.state.oppInfo.full_name + ': ' + this.state.selectedTeamStats.oppStats.pts}</IntroText>
             <ButtonHolder>
               <PlayButtons onClick={this.playAgainClick}>Play Again?!</PlayButtons>
             </ButtonHolder>
@@ -352,8 +382,8 @@ class Main extends React.Component {
       console.log(this.state);
       return (
         <div>
-          <h2>Basketball Showdown</h2>
-          <div>{this.state.pregameMessage}</div>
+          <Title>Basketball Showdown</Title>
+          <IntroText>{this.state.pregameMessage}</IntroText>
           <ButtonHolder>
             <PlayButtons onClick={this.handleGameClick}>Play!</PlayButtons>
           </ButtonHolder>
@@ -364,15 +394,15 @@ class Main extends React.Component {
       if (!this.state.loadedOpp) {
         return (
         <div>
-          <h2>Basketball Showdown</h2>
-          <div>Loading Your Opponent</div>
+          <Title>Basketball Showdown</Title>
+          <IntroText>Loading Your Opponent</IntroText>
         </div>
         )
       } else {
         return (
           <div>
-            <h2>Basketball Showdown</h2>
-            <div>Your Squad Will be Taking on the {' ' + this.state.oppInfo.full_name}</div>
+            <Title>Basketball Showdown</Title>
+            <IntroText>Your Squad Will be Taking on the {' ' + this.state.oppInfo.full_name}</IntroText>
             <div>
               <div>
                 {this.state.rotation.map((item, index) => <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}
@@ -392,7 +422,7 @@ class Main extends React.Component {
     if (this.state.rosterView) {
       return (
         <div>
-          <h2>Basketball Showdown</h2>
+          <Title>Basketball Showdown</Title>
           {this.state.rotation.map((item, index) =>
           <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}</div>
           )}
@@ -405,9 +435,9 @@ class Main extends React.Component {
     if (this.state.minutesAdj) {
       return (
         <div>
-          <h2>Basketball Showdown</h2>
-          <div>Set Your Team's Minutes, Coach!</div>
-          <div>{this.state.alottedMinutes} / 240</div>
+          <Title>Basketball Showdown</Title>
+          <IntroText>Set Your Team's Minutes, Coach!</IntroText>
+          <IntroText>{this.state.alottedMinutes} / 240</IntroText>
           <CardGridContainer>
             {this.state.selectedPlayerRecords.map((item, index) =>
             <div key={index}>
@@ -424,9 +454,9 @@ class Main extends React.Component {
     if (this.state.loaded) {
       return (
         <div>
-          <h2>Basketball Showdown</h2>
-          <div>Select 12 Players!</div>
-          <div>{this.state.selectedPlayerRecords.length} out of 12</div>
+          <Title>Basketball Showdown</Title>
+          <IntroText>Select 12 Players!</IntroText>
+          <IntroText>{this.state.selectedPlayerRecords.length} out of 12</IntroText>
           <CardGridContainer>{this.state.data.map((item, index) => <CardView onClick={this.cardClickHandler} key={index} info={item}/>)}</CardGridContainer>
           <ButtonHolder>
             <PlayButtons onClick={this.teamSelectedHandler}>Done?</PlayButtons>
@@ -437,8 +467,8 @@ class Main extends React.Component {
     if (this.state.selection) {
       return (
       <div>
-        <h2>Basketball Showdown</h2>
-        <div>Loading Your Pack!</div>
+        <Title>Basketball Showdown</Title>
+        <IntroText>Loading Your Pack!</IntroText>
       </div>
       )
     }
