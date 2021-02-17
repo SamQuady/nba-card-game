@@ -50,6 +50,9 @@ class Main extends React.Component {
       rotation: [],
       selectedTeamStats: {},
       alottedMinutes: 0,
+      loadedOpp: false,
+      oppData: [],
+      oppInfo: {},
       teamWins: 0,
       teamLosses: 0
     };
@@ -136,7 +139,6 @@ class Main extends React.Component {
 
   statsBasedOnSelectedMinutes() {
     let records = this.state.selectedPlayerRecords;
-    console.log(records);
     for (let index = 0; index < records.length; index++ ) {
       let calculatedStats = {};
       let categories = Object.keys(records[index][0][1]);
@@ -150,6 +152,19 @@ class Main extends React.Component {
 
   handleRosterViewAdvanceClick(event) {
     this.setState({rosterView: false, gamePreview: true});
+    let oppIndex = Math.floor(Math.random() * (31 - 1) + 1);
+    fetch('http://localhost:8080/api/team/' + oppIndex)
+      .then(result => result.json())
+      .then((result) => {
+        let colatedInfo = [];
+        let opp = result[0][2];
+        for (let index = 0; index < result.length; index ++) {
+          if (result[index][1] !== null) {
+            colatedInfo.push([result]);
+          }
+        }
+        this.setState({loadedOpp: true, oppData: colatedInfo, oppInfo: opp});
+      })
   }
 
   componentDidMount() {
@@ -195,12 +210,21 @@ class Main extends React.Component {
   }
   render() {
     if (this.state.gamePreview) {
-      return (
+      if (!this.state.loadedOpp) {
+        return (
         <div>
           <h2>Basketball Showdown</h2>
-          <div>Your Squad Will Be Taking on the </div>
+          <div>Loading Your Opponent</div>
         </div>
-      )
+        )
+      } else {
+        return (
+          <div>
+            <h2>Basketball Showdown</h2>
+            <div>Your Squad Will be Taking on the {' ' + this.state.oppInfo.full_name}</div>
+          </div>
+        )
+      }
     }
     if (this.state.rosterView) {
       return (
