@@ -42,7 +42,7 @@ class Main extends React.Component {
       minutesAdj: false,
       rosterView: false,
       gamePreview: false,
-      pregameEvent: false,
+      pregameScenario: false,
       gamePage: false,
       data: [],
       teamIndexes: [],
@@ -53,6 +53,9 @@ class Main extends React.Component {
       loadedOpp: false,
       oppData: [],
       oppInfo: {},
+      multiplier: 0,
+      oppMultiplier: 0,
+      pregameMessage: '',
       teamWins: 0,
       teamLosses: 0
     };
@@ -63,6 +66,10 @@ class Main extends React.Component {
     this.teamMinutesSelectedHandler = this.teamMinutesSelectedHandler.bind(this);
     this.statsBasedOnSelectedMinutes = this.statsBasedOnSelectedMinutes.bind(this);
     this.handleRosterViewAdvanceClick = this.handleRosterViewAdvanceClick.bind(this);
+    this.handlePregameClick = this.handlePregameClick.bind(this);
+    this.pregameMessageChooser = this.pregameMessageChooser.bind(this);
+    this.handleGameClick = this.handleGameClick.bind(this);
+    this.playAgainClick = this.playAgainClick.bind(this);
   }
 
   packIdSelection() {
@@ -167,6 +174,113 @@ class Main extends React.Component {
       })
   }
 
+  handlePregameClick() {
+    let multiplier = Math.floor(Math.random() * (11 - 0) + 0);
+    multiplier = ((multiplier - 5) / 10) + 1;
+    let oppMultiplier = Math.floor(Math.random() * (11 - 0) + 0);
+    oppMultiplier = ((oppMultiplier - 5) / 10) + 1;
+    let message = this.pregameMessageChooser(multiplier);
+    this.setState({gamePreview: false, pregameScenario: true, multiplier: multiplier, oppMultiplier: oppMultiplier, pregameMessage: message});
+  }
+
+  pregameMessageChooser(multiplier) {
+
+    let positiveMessages = [
+      'Your team got a great rest last night, they should be ready to play!',
+      'Your team\'s pre-game meal was especailly good, and your players are well-fueled for their big game',
+      'Your star player studied extra film last night, and helpfully prepped your other players for the game today',
+      'Everyone on your team is locked in and ready for the game!',
+      'Your team\'s bench players have been working on a new celebration, and they\'ve got everyone exicted for today\'s game',
+      'Your opponent got in late last night, and your players know they\'ll have the advantage',
+      'Your opponent just played yesterday, and your players think they\'ll be able to get off to a quick start',
+      'Your opponent\'s star player is suffering from Covid-19! Your players should be able to romp',
+      'It looks like three of your opponent\'s players went clubbing last night, and they won\'t be fully prepared to play!',
+      'Your opponent\'s players are feuding, and it looks like they won\'t be working very well together'
+    ];
+
+    let negativeMessages = [
+      'Oh no, it looks like your team is suffering from a Covid-19 outbreak!',
+      'Uh oh, your star player overslept, and is completely unprepared to play!',
+      'Oh my! It seems your team\'s pregame meal made half your team horrible ill, the game today will be a real uphill battle!',
+      'It looks like your players misread the schedule and prepped for the wrong team!',
+      'Your star player sprained his ankle this morning getting out of bed, and he might not be fully movile today!',
+      'Goodness! Your entire team is feuding, and they don\'t want to play together at all!',
+      'Yikes - a couple of your players stayed in the team\'s ice tub too long after practice, and they can barely move!',
+      'It appears your star player\'s ex is dating the star of your opponent, and he\'s a shell of himself today!',
+      'Your opponents are coming in today on a roll, and they\'re confident they\'ll be able to roll you',
+      'Disaster - your team went out to dinner together last night together, and it appears they had a few too many drinks! A bad case of the wine-flu is afflicting them',
+      'Your second best player swears he saw a ghost last night, and he\'s terrified to play tonight!',
+      'Looks like your team\'s equipment manager lost your team\'s shoes last night - everyone is going to have to play in socks!'
+    ];
+
+    let neutralMessages = [
+      'Both teams are well rested and ready to play!',
+      'Everyone has been looking forward to and prepping for today\'s game!',
+      'Looks like the game tonight will be on national TV, and everyone is excited to play!'
+    ];
+
+    let index = 0;
+    let message = '';
+
+    if (multiplier > 0) {
+      index = Math.floor(Math.random() * (positiveMessages.length - 0) + 0);
+      message = positiveMessages[index];
+    } else if (multiplier < 0) {
+      index = Math.floor(Math.random() * (negativeMessages.length - 0) + 0);
+      message = negativeMessages[index];
+    } else {
+      index = Math.floor(Math.random() * (neutralMessages.length - 0) + 0);
+      message = neutralMessages[index];
+    }
+
+    return message;
+
+  }
+
+  handleGameClick() {
+
+    let selectedTeamStats = {};
+    let selectedOppStats = {};
+    let results = {};
+
+    let categories = Object.keys(this.state.rotation[0][0][5]);
+
+    for (let index = 0; index < this.state.rotation.length; index ++) {
+      for (let i = 0; i < categories.length; i ++) {
+        if (selectedTeamStats[categories[i]] === undefined) {
+          selectedTeamStats[categories[i]] = 0;
+        }
+        selectedTeamStats[categories[i]] += Math.floor(this.state.multiplier * (this.state.rotation[index][0][5][categories[i]]));
+      }
+    }
+
+    let records = this.state.oppData;
+    records.sort((a, b) => {
+      return b[0][1].pts - a[0][1].pts;
+    });
+
+    for (let j = 0; j < this.state.oppData.length; j ++) {
+      for (let k = 0; k < categories.length; k ++) {
+        if (selectedOppStats[categories[k]] === undefined) {
+          selectedOppStats[categories[k]] = 0;
+        }
+        selectedOppStats[categories[k]] += Math.floor(this.state.oppMultiplier * (this.state.oppData[j][0][1][categories[k]]));
+      }
+    }
+    results.teamStats = selectedTeamStats;
+    results.oppStats = selectedOppStats;
+    if (selectedTeamStats.pts >= selectedOppStats.pts) {
+      results.decision = 'win';
+    } else {
+      results.decision = 'lose';
+    }
+    this.setState({selectedTeamStats: results, pregameScenario: false, gamePage: true});
+  }
+
+  playAgainClick() {
+    this.setState({minutesAdj: true, gamePage: false});
+  }
+
   componentDidMount() {
     //add more robust null elimination, more robust prevention of additional entries upon first selection click
     let ids = this.packIdSelection();
@@ -209,6 +323,43 @@ class Main extends React.Component {
     }
   }
   render() {
+    if (this.state.gamePage) {
+      if (this.state.selectedTeamStats.decision === 'win') {
+        return (
+          <div>
+            <h2>Basketball Showdown</h2>
+            <div>Congratulations! You Won</div>
+            <div>Final Score - You: {this.state.selectedTeamStats.teamStats.pts} {' ' + this.state.oppInfo.full_name + ': ' + this.state.selectedTeamStats.oppStats.pts}</div>
+            <ButtonHolder>
+              <PlayButtons onClick={this.playAgainClick}>Play Again?!</PlayButtons>
+            </ButtonHolder>
+          </div>
+        )
+      } else {
+        return (
+          <div>
+            <h2>Basketball Showdown</h2>
+            <div>Whoops! You Lost</div>
+            <div>Final Score - You: {this.state.selectedTeamStats.teamStats.pts} {' ' + this.state.oppInfo.full_name + ': ' + this.state.selectedTeamStats.oppStats.pts}</div>
+            <ButtonHolder>
+              <PlayButtons onClick={this.playAgainClick}>Play Again?!</PlayButtons>
+            </ButtonHolder>
+          </div>
+        )
+      }
+    }
+    if (this.state.pregameScenario) {
+      console.log(this.state);
+      return (
+        <div>
+          <h2>Basketball Showdown</h2>
+          <div>{this.state.pregameMessage}</div>
+          <ButtonHolder>
+            <PlayButtons onClick={this.handleGameClick}>Play!</PlayButtons>
+          </ButtonHolder>
+        </div>
+      )
+    }
     if (this.state.gamePreview) {
       if (!this.state.loadedOpp) {
         return (
@@ -218,7 +369,6 @@ class Main extends React.Component {
         </div>
         )
       } else {
-        console.log(this.state.oppData)
         return (
           <div>
             <h2>Basketball Showdown</h2>
@@ -227,12 +377,14 @@ class Main extends React.Component {
               <div>
                 {this.state.rotation.map((item, index) => <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}
               </div>)}
+              </div>
               <div>
                 {this.state.oppData.map((item, index) => <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][1].min + ' mins'}</div>)}
               </div>
-              </div>
+              <ButtonHolder>
+                <PlayButtons onClick={this.handlePregameClick}>Load Pregame Scenario</PlayButtons>
+              </ButtonHolder>
             </div>
-            <button>Ready?</button>
           </div>
         )
       }

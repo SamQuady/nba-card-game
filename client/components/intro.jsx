@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 const PlayButtons = styled.button`
 line-height: 30px;
-margin-left: 0.75em;
 background-color: white;
 border-radius: 2px;
 border-style: solid;
@@ -22,6 +21,19 @@ width: auto;
 const ButtonHolder = styled.div`
 margin-top: 30px;
 padding-top: 30px;
+text-align: center;
+`;
+
+const Title = styled.h2`
+font-family: Copperplate, fantasy;
+font-size: 30px;
+text-align: center;
+`;
+
+const IntroText = styled.div`
+font-family: Arial, Helvetica, sans-serif;
+font-size: 20px;
+text-align: center;
 `;
 
 class Intro extends React.Component {
@@ -32,12 +44,12 @@ class Intro extends React.Component {
   render() {
     return (
       <div>
-        <h2>Basketball Showdown</h2>
+        <Title>Basketball Showdown</Title>
         <div>
-          <div>Have you every stared at a set of basketball cards and wished that you could turn them into a real team?</div>
-          <div>Well, now you can</div>
-          <div>With Basketball Showdown, you can get a pack of cards, assemble them into a team, and then see how they stack up against an entire league of other teams!</div>
-          <div>Are you ready to get started?</div>
+          <IntroText>Have you every stared at a set of basketball cards and wished that you could turn them into a real team?</IntroText>
+          <IntroText>Well, now you can</IntroText>
+          <IntroText>With Basketball Showdown, you can get a pack of cards, assemble them into a team, and then see how they stack up against an entire league of other teams!</IntroText>
+          <IntroText>Are you ready to get started?</IntroText>
           <ButtonHolder>
             <PlayButtons onClick={(event) => {this.props.onClick()}}>Deal Me a Pack!</PlayButtons>
           </ButtonHolder>
