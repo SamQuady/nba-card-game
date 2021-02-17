@@ -57,6 +57,7 @@ class Main extends React.Component {
     this.teamSelectedHandler = this.teamSelectedHandler.bind(this);
     this.handleMinutesChange = this.handleMinutesChange.bind(this);
     this.teamMinutesSelectedHandler = this.teamMinutesSelectedHandler.bind(this);
+    this.statsBasedOnSelectedMinutes = this.statsBasedOnSelectedMinutes.bind(this);
   }
 
   packIdSelection() {
@@ -107,7 +108,7 @@ class Main extends React.Component {
     for (let index = 0; index < records.length; index ++) {
       minutes += Number(records[index][0][3].assignedMinutes);
     };
-    if (minutes >= 240) {
+    if (minutes > 240) {
       alert(`You Assigned All Available Minutes, Already!`);
     }
     this.setState({selectedPlayerRecords: records, alottedMinutes: minutes});
@@ -122,12 +123,27 @@ class Main extends React.Component {
         alert(`You Haven't Assigned Enough Minutes Yet to Coninue! Add Some More!`);
       }
     } else {
+      this.statsBasedOnSelectedMinutes();
       let records = this.state.selectedPlayerRecords;
       records.sort((a, b) => {
         return b[0][3].assignedMinutes - a[0][3].assignedMinutes;
       });
       this.setState({minutesAdj: false, gamePreview: true, rotation: records});
     }
+  }
+
+  statsBasedOnSelectedMinutes() {
+    let records = this.state.selectedPlayerRecords;
+    console.log(records);
+    for (let index = 0; index < records.length; index++ ) {
+      let calculatedStats = {};
+      let categories = Object.keys(records[index][0][1]);
+      for (let i = 0; i < categories.length; i ++) {
+        calculatedStats[categories[i]] = (records[index][0][4][categories[i]] * records[index][0][3].assignedMinutes);
+      }
+      records[index][0].push(calculatedStats);
+    }
+    this.setState({selectedPlayerRecords: records});
   }
 
   componentDidMount() {
