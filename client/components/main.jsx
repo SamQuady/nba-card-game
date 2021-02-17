@@ -30,7 +30,7 @@ width: auto;
 const ButtonHolder = styled.div`
 margin-top: 30px;
 padding-top: 30px;
-`
+`;
 
 
 class Main extends React.Component {
@@ -144,6 +144,19 @@ class Main extends React.Component {
             selectedIds.push(playerId);
             if (result[1] !== null) {
               result.push({assignedMinutes: 0});
+              let categories = Object.keys(result[1]);
+              let perMin = {};
+              let minutes = result[1].min;
+              let minutesSplit = minutes.split(':');
+              let fractionMinutes = Number(minutesSplit[0]) + (Number(minutesSplit[1]) / 60);
+              for (let i = 0; i < categories.length; i++) {
+                if (categories[i] === 'min') {
+                  perMin.min = 1;
+                } else {
+                  perMin.[categories[i]] = (result[1][categories[i]] / fractionMinutes);
+                }
+              }
+              result.push(perMin);
               colatedInfo.push([result]);
             }
           }
