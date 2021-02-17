@@ -160,9 +160,9 @@ class Main extends React.Component {
               colatedInfo.push([result]);
             }
           }
-          if (colatedInfo.length === 20) {
-            this.setState({loaded:true, data: colatedInfo});
-            return;
+          if (index === ids.length - 1) {
+            let selectedData = colatedInfo.slice(0, 20);
+            this.setState({loaded:true, data: selectedData});
           }
         },
         (error) => {
