@@ -195,7 +195,9 @@ class Main extends React.Component {
               <input type="number" name="minutes" min="0" max="48" id={index} onChange={this.handleMinutesChange}></input>
             </div>)}
           </CardGridContainer>
-          <button onClick={this.teamMinutesSelectedHandler}>Let's Play!</button>
+          <ButtonHolder>
+            <PlayButtons onClick={this.teamMinutesSelectedHandler}>Let's Play!</PlayButtons>
+          </ButtonHolder>
         </div>
       )
     }
