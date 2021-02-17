@@ -1,5 +1,7 @@
 import React from 'react';
 import CardView from './card-view.jsx';
+import styled from 'styled-components';
+
 
 class Main extends React.Component {
   constructor(props) {
@@ -8,9 +10,13 @@ class Main extends React.Component {
       loaded: false,
       selection: true,
       minutesAdj: false,
-      data: []
+      data: [],
+      teamIndexes: [],
+      selectedPlayerRecords: []
     };
     this.packIdSelection = this.packIdSelection.bind(this);
+    this.cardClickHandler = this.cardClickHandler.bind(this);
+    this.teamSelectedHandler = this.teamSelectedHandler.bind(this);
   }
 
   packIdSelection() {
@@ -21,6 +27,39 @@ class Main extends React.Component {
     }
     return results;
   }
+
+  cardClickHandler(record) {
+    let index = record[0].id;
+    if (this.state.teamIndexes.indexOf(index) < 0) {
+      if (this.state.teamIndexes.length === 12) {
+        event.preventDefault();
+        alert(`Too Many Players Selected!`);
+        return;
+      }
+      let previous = this.state.teamIndexes;
+      previous.push(index);
+      let selectedPlayers = this.state.selectedPlayerRecords;
+      selectedPlayers.push(record);
+      this.setState({teamIndexes: previous, selectedPlayerRecords: selectedPlayers});
+    } else {
+      let subtracted = this.state.teamIndexes;
+      let spliceIndex = subtracted.indexOf(index);
+      subtracted.splice(spliceIndex, 1);
+      let previouslySelectedPlayers = this.state.selectedPlayerRecords;
+      previouslySelectedPlayers.splice(spliceIndex, 1);
+      this.setState({teamIndexes: subtracted, selectedPlayerRecords: previouslySelectedPlayers});
+    }
+  }
+
+  teamSelectedHandler() {
+    if (this.state.teamIndexes.length < 12) {
+      event.preventDefault();
+      alert(`Select 12 Players!`)
+    } else {
+      this.setState({selection: false, minutesAdj: true});
+    }
+  }
+
   componentDidMount() {
     let ids = this.packIdSelection();
     let colatedInfo = [];
@@ -51,7 +90,8 @@ class Main extends React.Component {
       return (
         <div>
           <h2>Basketball Showdown</h2>
-          <div>{this.state.data.map((item, index) => <CardView key={index} info={item}/>)}</div>
+          <div>{this.state.data.map((item, index) => <CardView onClick={this.cardClickHandler} key={index} info={item}/>)}</div>
+          <button onClick={this.teamSelectedHandler}>Done?</button>
         </div>
       )
     }

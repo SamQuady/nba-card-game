@@ -14,7 +14,6 @@ app.get('/api/:playerId', (req, res) => {
       console.log('GET ERROR', err);
       res.status(400).send(err).end();
     } else {
-        console.log('GET success', data);
         res.status(200).send(data).end();
 
     }
