@@ -1,5 +1,6 @@
 import React from 'react';
 import CardView from './card-view.jsx';
+import MinAdjCardView from './minutes-adjust-card-view.jsx';
 import styled from 'styled-components';
 
 const CardGridContainer = styled.div`
@@ -50,17 +51,30 @@ font-size: 30px;
 text-align: center;
 `;
 
-const PlayerName = styled.div`
-font-family: Copperplate, fantasy;
-font-size: 20px;
-text-align: center;
+const OuterCardViewContainer = styled.div`
+padding-left: 3.5%;
+padding-top: 25px;
 `;
 
-const Stats = styled.div`
+const RotationGridContainer = styled.div`
+display: grid;
+grid-template-columns: 40% 40%
+grid-column-gap: 10%;
+grid-row-gap: 2%;
+`;
+
+const TeamRotationContainer = styled.div`
+margin-left: 40%;
+`;
+
+const RosterText = styled.div`
 font-family: Arial, Helvetica, sans-serif;
 font-size: 18px;
-text-align: center;
+text-align: left;
 `;
+
+
+
 
 
 class Main extends React.Component {
@@ -308,7 +322,19 @@ class Main extends React.Component {
   }
 
   playAgainClick() {
-    this.setState({minutesAdj: true, gamePage: false});
+    this.setState({
+      selection: true,
+      gamePage: false,
+      selectedPlayerRecords: [],
+      rotation: [],
+      selectedTeamStats: {},
+      alottedMinutes: 0,
+      loadedOpp: false,
+      oppData: [],
+      oppInfo: {},
+      multiplier: 0,
+      oppMultiplier: 0,
+      pregameMessage: ''});
   }
 
   componentDidMount() {
@@ -402,19 +428,16 @@ class Main extends React.Component {
         return (
           <div>
             <Title>Basketball Showdown</Title>
+            <div></div>
             <IntroText>Your Squad Will be Taking on the {' ' + this.state.oppInfo.full_name}</IntroText>
-            <div>
+            <TeamRotationContainer>
               <div>
-                {this.state.rotation.map((item, index) => <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}
-              </div>)}
+                {this.state.oppData.map((item, index) => <RosterText key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][1].min + ' mins'}</RosterText>)}
               </div>
-              <div>
-                {this.state.oppData.map((item, index) => <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][1].min + ' mins'}</div>)}
-              </div>
-              <ButtonHolder>
+            </TeamRotationContainer>
+            <ButtonHolder>
                 <PlayButtons onClick={this.handlePregameClick}>Load Pregame Scenario</PlayButtons>
               </ButtonHolder>
-            </div>
           </div>
         )
       }
@@ -423,9 +446,11 @@ class Main extends React.Component {
       return (
         <div>
           <Title>Basketball Showdown</Title>
+          <TeamRotationContainer>
           {this.state.rotation.map((item, index) =>
-          <div key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}</div>
+          <RosterText key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}</RosterText>
           )}
+          </TeamRotationContainer>
           <ButtonHolder>
             <PlayButtons onClick={this.handleRosterViewAdvanceClick}>Play a Game!</PlayButtons>
           </ButtonHolder>
@@ -438,13 +463,15 @@ class Main extends React.Component {
           <Title>Basketball Showdown</Title>
           <IntroText>Set Your Team's Minutes, Coach!</IntroText>
           <IntroText>{this.state.alottedMinutes} / 240</IntroText>
+          <OuterCardViewContainer>
           <CardGridContainer>
             {this.state.selectedPlayerRecords.map((item, index) =>
             <div key={index}>
-              <CardView info={item}/>
+              <MinAdjCardView info={item}/>
               <input type="number" name="minutes" min="0" max="48" id={index} onChange={this.handleMinutesChange}></input>
             </div>)}
           </CardGridContainer>
+          </OuterCardViewContainer>
           <ButtonHolder>
             <PlayButtons onClick={this.teamMinutesSelectedHandler}>Let's Play!</PlayButtons>
           </ButtonHolder>
@@ -457,7 +484,9 @@ class Main extends React.Component {
           <Title>Basketball Showdown</Title>
           <IntroText>Select 12 Players!</IntroText>
           <IntroText>{this.state.selectedPlayerRecords.length} out of 12</IntroText>
+          <OuterCardViewContainer>
           <CardGridContainer>{this.state.data.map((item, index) => <CardView onClick={this.cardClickHandler} key={index} info={item}/>)}</CardGridContainer>
+          </OuterCardViewContainer>
           <ButtonHolder>
             <PlayButtons onClick={this.teamSelectedHandler}>Done?</PlayButtons>
           </ButtonHolder>

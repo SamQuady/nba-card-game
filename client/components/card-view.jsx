@@ -35,7 +35,7 @@ text-align: center;
 
 const Stats = styled.div`
 font-family: Arial, Helvetica, sans-serif;
-font-size: 18px;
+font-size: 16px;
 text-align: center;
 `;
 
