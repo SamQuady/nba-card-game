@@ -343,28 +343,28 @@ class Main extends React.Component {
     let colatedInfo = [];
     let selectedIds = [];
     for (let index = 0; index < ids.length; index ++) {
-      fetch('http://localhost:8080/api/players/' + ids[index])
+      fetch('http://localhost:3000/api/players/' + ids[index])
         .then(result => result.json())
         .then((result) => {
-          let playerId = result[0].id;
+          let playerId = result.player.id;
           if (selectedIds.indexOf(playerId) < 0) {
             selectedIds.push(playerId);
-            if (result[1] !== null) {
-              result.push({assignedMinutes: 0});
-              let categories = Object.keys(result[1]);
+            if (result.stats !== undefined) {
+              result.assignedMinutes = 0;
+              let categories = Object.keys(result.stats);
               let perMin = {};
-              let minutes = result[1].min;
+              let minutes = result.stats.min;
               let minutesSplit = minutes.split(':');
               let fractionMinutes = Number(minutesSplit[0]) + (Number(minutesSplit[1]) / 60);
               for (let i = 0; i < categories.length; i++) {
                 if (categories[i] === 'min') {
                   perMin.min = 1;
                 } else {
-                  perMin.[categories[i]] = (result[1][categories[i]] / fractionMinutes);
+                  perMin.[categories[i]] = (result.stats[categories[i]] / fractionMinutes);
                 }
               }
-              result.push(perMin);
-              colatedInfo.push([result]);
+              result.perMin = perMin;
+              colatedInfo.push(result);
             }
           }
           if (index === ids.length - 1) {
