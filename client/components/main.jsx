@@ -126,7 +126,7 @@ class Main extends React.Component {
   }
 
   cardClickHandler(record) {
-    let index = record[0][0].id;
+    let index = record.player.id;
     if (this.state.teamIndexes.indexOf(index) < 0) {
       if (this.state.teamIndexes.length === 12) {
         event.preventDefault();
