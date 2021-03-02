@@ -148,18 +148,18 @@ const teamGetter = (id, cb) => {
     } else {
       let playerRecords = playerRes.rows;
       for (let index = 0; index < playerRecords.length; index ++) {
-        let record = [];
-        record.push(playerRecords[index]);
+        let record = {};
+        record.player = playerRecords[index];
         pool.query(statsQuery + playerRecords[index].id, (err, statsRes) => {
           if (err) {
             console.log(err);
           } else {
-            record.push(statsRes.rows[0]);
+            record.stats = statsRes.rows[0];
             pool.query(teamQuery + id, (err, teamRes) => {
               if (err) {
                 console.log(err);
               } else {
-                record.push(teamRes.rows[0]);
+                record.team = teamRes.rows[0];
                 data.push(record);
                 if (data.length === playerRecords.length) {
                   cb(null, data);
