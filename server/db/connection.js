@@ -113,24 +113,24 @@ const oppPlayerQuery = `SELECT * FROM players WHERE team = `;
 
 // -------Front Facing Records Query----------//
 const playerCardDataGetter = (id, cb) => {
-  let data = [];
+  let data = {};
   let teamId = 0;
   pool.query(playerQuery + id, (err, playerRes) => {
     if (err) {
       console.log(err);
     } else {
       teamId = playerRes.rows[0].team;
-      data.push(playerRes.rows[0]);
+      data.player = playerRes.rows[0];
       pool.query(statsQuery + id, (err, statsRes) => {
         if (err) {
           console.log(err);
         } else {
-          data.push(statsRes.rows[0]);
+          data.stats = statsRes.rows[0];
           pool.query(teamQuery + teamId, (err, teamRes) => {
             if (err) {
               console.log(err);
             } else {
-              data.push(teamRes.rows[0]);
+              data.team = teamRes.rows[0];
               cb(null, data);
             }
           })
