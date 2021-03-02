@@ -349,7 +349,7 @@ class Main extends React.Component {
           let playerId = result.player.id;
           if (selectedIds.indexOf(playerId) < 0) {
             selectedIds.push(playerId);
-            if (result.stats !== undefined) {
+            if (result.stats !== undefined && result.stats.games_played > 0) {
               result.assignedMinutes = 0;
               let categories = Object.keys(result.stats);
               let perMin = {};
