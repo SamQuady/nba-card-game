@@ -35,13 +35,13 @@ class MinAdjCardView extends React.Component {
   render() {
     return (
       <Card >
-      <PlayerName>{this.props.info[0][0].first_name + ' ' + this.props.info[0][0].last_name}</PlayerName>
-      <Stats>{this.props.info[0][0].height_feet + '\'' + this.props.info[0][0].height_inches + '"' + ' ' + this.props.info[0][0].weight_pounds + ' lbs. ' + this.props.info[0][0].position}</Stats>
-      <Stats>{this.props.info[0][2].full_name}</Stats>
-      <Stats>{this.props.info[0][1].min + 'mpg'}</Stats>
-      <Stats>{(Math.round(this.props.info[0][1].pts * 10) / 10) + 'pts'}</Stats>
-      <Stats>{(Math.round(this.props.info[0][1].reb * 10) / 10) + 'reb'}</Stats>
-      <Stats>{(Math.round(this.props.info[0][1].ast * 10) / 10) + 'ast'}</Stats>
+      <PlayerName>{this.props.info.player.first_name + ' ' + this.props.info.player.last_name}</PlayerName>
+      <Stats>{this.props.info.player.height_feet + '\'' + this.props.info.player.height_inches + '"' + ' ' + this.props.info.player.weight_pounds + ' lbs. ' + this.props.info.player.position}</Stats>
+      <Stats>{this.props.info.team.full_name}</Stats>
+      <Stats>{this.props.info.stats.min + 'mpg'}</Stats>
+      <Stats>{(Math.round(this.props.info.stats.pts * 10) / 10) + 'pts'}</Stats>
+      <Stats>{(Math.round(this.props.info.stats.reb * 10) / 10) + 'reb'}</Stats>
+      <Stats>{(Math.round(this.props.info.stats.ast * 10) / 10) + 'ast'}</Stats>
       </Card>
     )
   }
