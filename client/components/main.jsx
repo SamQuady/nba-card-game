@@ -160,9 +160,9 @@ class Main extends React.Component {
   handleMinutesChange(event) {
     let minutes = 0;
     let records = this.state.selectedPlayerRecords;
-    records[event.target.id][0][3].assignedMinutes = Number(event.target.value);
+    records[event.target.id].assignedMinutes = Number(event.target.value);
     for (let index = 0; index < records.length; index ++) {
-      minutes += Number(records[index][0][3].assignedMinutes);
+      minutes += Number(records[index].assignedMinutes);
     };
     if (minutes > 240) {
       alert(`You Assigned All Available Minutes, Already!`);
