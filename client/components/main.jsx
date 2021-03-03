@@ -204,14 +204,14 @@ class Main extends React.Component {
   handleRosterViewAdvanceClick(event) {
     this.setState({rosterView: false, gamePreview: true});
     let oppIndex = Math.floor(Math.random() * (31 - 1) + 1);
-    fetch('http://localhost:8080/api/team/' + oppIndex)
+    fetch('http://localhost:3000/api/team/' + oppIndex)
       .then(result => result.json())
       .then((result) => {
         let colatedInfo = [];
-        let opp = result[0][2];
+        let opp = result[0].team;
         for (let index = 0; index < result.length; index ++) {
-          if (result[index][1] !== null) {
-            colatedInfo.push([result[index]]);
+          if (result[index].stats.games_played) {
+            colatedInfo.push(result[index]);
           }
         }
         this.setState({loadedOpp: true, oppData: colatedInfo, oppInfo: opp});
@@ -448,7 +448,7 @@ class Main extends React.Component {
           <Title>Basketball Showdown</Title>
           <TeamRotationContainer>
           {this.state.rotation.map((item, index) =>
-          <RosterText key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][3].assignedMinutes + ' mins'}</RosterText>
+          <RosterText key={index}>{item.player.first_name + ' ' + item.player.last_name + ' ' + item.assignedMinutes + ' mins'}</RosterText>
           )}
           </TeamRotationContainer>
           <ButtonHolder>
