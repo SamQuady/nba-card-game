@@ -210,7 +210,7 @@ class Main extends React.Component {
         let colatedInfo = [];
         let opp = result[0].team;
         for (let index = 0; index < result.length; index ++) {
-          if (result[index].stats.games_played) {
+          if (result[index].stats) {
             colatedInfo.push(result[index]);
           }
         }
@@ -405,7 +405,6 @@ class Main extends React.Component {
       }
     }
     if (this.state.pregameScenario) {
-      console.log(this.state);
       return (
         <div>
           <Title>Basketball Showdown</Title>
@@ -432,7 +431,7 @@ class Main extends React.Component {
             <IntroText>Your Squad Will be Taking on the {' ' + this.state.oppInfo.full_name}</IntroText>
             <TeamRotationContainer>
               <div>
-                {this.state.oppData.map((item, index) => <RosterText key={index}>{item[0][0].first_name + ' ' + item[0][0].last_name + ' ' + item[0][1].min + ' mins'}</RosterText>)}
+                {this.state.oppData.map((item, index) => <RosterText key={index}>{item.player.first_name + ' ' + item.player.last_name + ' ' + item.stats.min + ' mins'}</RosterText>)}
               </div>
             </TeamRotationContainer>
             <ButtonHolder>
