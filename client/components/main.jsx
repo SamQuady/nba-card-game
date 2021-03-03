@@ -182,7 +182,7 @@ class Main extends React.Component {
       this.statsBasedOnSelectedMinutes();
       let records = this.state.selectedPlayerRecords;
       records.sort((a, b) => {
-        return b[0][3].assignedMinutes - a[0][3].assignedMinutes;
+        return b.assignedMinutes - a.assignedMinutes;
       });
       this.setState({minutesAdj: false, rosterView: true, rotation: records});
     }
@@ -192,11 +192,11 @@ class Main extends React.Component {
     let records = this.state.selectedPlayerRecords;
     for (let index = 0; index < records.length; index++ ) {
       let calculatedStats = {};
-      let categories = Object.keys(records[index][0][1]);
+      let categories = Object.keys(records[index].stats);
       for (let i = 0; i < categories.length; i ++) {
-        calculatedStats[categories[i]] = (records[index][0][4][categories[i]] * records[index][0][3].assignedMinutes);
+        calculatedStats[categories[i]] = (records[index].perMin[categories[i]] * records[index].assignedMinutes);
       }
-      records[index][0].push(calculatedStats);
+      records[index].calculatedStats = calculatedStats;
     }
     this.setState({selectedPlayerRecords: records});
   }
