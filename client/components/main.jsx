@@ -287,20 +287,20 @@ class Main extends React.Component {
     let selectedOppStats = {};
     let results = {};
 
-    let categories = Object.keys(this.state.rotation[0][0][5]);
+    let categories = Object.keys(this.state.rotation[0].perMin);
 
     for (let index = 0; index < this.state.rotation.length; index ++) {
       for (let i = 0; i < categories.length; i ++) {
         if (selectedTeamStats[categories[i]] === undefined) {
           selectedTeamStats[categories[i]] = 0;
         }
-        selectedTeamStats[categories[i]] += Math.floor(this.state.multiplier * (this.state.rotation[index][0][5][categories[i]]));
+        selectedTeamStats[categories[i]] += Math.floor(this.state.multiplier * (this.state.rotation[index].calculatedStats[categories[i]]));
       }
     }
 
     let records = this.state.oppData;
     records.sort((a, b) => {
-      return b[0][1].pts - a[0][1].pts;
+      return b.stats.pts - a.stats.pts;
     });
 
     for (let j = 0; j < this.state.oppData.length; j ++) {
@@ -308,7 +308,7 @@ class Main extends React.Component {
         if (selectedOppStats[categories[k]] === undefined) {
           selectedOppStats[categories[k]] = 0;
         }
-        selectedOppStats[categories[k]] += Math.floor(this.state.oppMultiplier * (this.state.oppData[j][0][1][categories[k]]));
+        selectedOppStats[categories[k]] += Math.floor(this.state.oppMultiplier * (this.state.oppData[j].stats[categories[k]]));
       }
     }
     results.teamStats = selectedTeamStats;
